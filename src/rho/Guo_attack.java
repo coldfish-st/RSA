@@ -15,12 +15,60 @@ public class Guo_attack {
 
 	BigInteger e_2 = new BigInteger("152206992575706893484835984472544529509325440944131662631741403414037956695665533186650071476146389737020554215956181827422540843366433981607643940546405002217220286072880967331118344806315756304650248634546597784597963886656422706197757265316981889118026978865295597135470735576032282694348773714479076093197");
 
+	BigInteger two = new BigInteger("2");
+	
 	static ArrayList<Pair> list = new ArrayList<Pair>();
 	
 	public Guo_attack() {
 		
+		readTxtFile("./data_set/num.txt", list);
+		Pair result = new Pair(BigInteger.ONE, BigInteger.ONE);
 		
+		for (int i = 0 ; i< list.size(); i++) {
+			
+			Pair pair = list.get(i);
+			BigInteger a = pair.getMin();
+			BigInteger b = pair.getMax();
+			
+			BigInteger x = e_1.multiply(a);
+			BigInteger y = e_2.multiply(b);			
+			BigInteger diff = x.subtract(y);
+			
+			if (a.mod(two).compareTo(BigInteger.ZERO) != 0 ||
+					b.mod(two).compareTo(BigInteger.ZERO) != 0) {
+				
+				System.out.println("a is"+a.toString()+" test 1");
+				
+				for (BigInteger k_2 = new BigInteger("3"); a.compareTo(k_2.multiply(k_2)) >= 0; k_2 = k_2.add(two) ) {
+					if (a.mod(k_2).compareTo(BigInteger.ZERO) == 0) {
+						BigInteger k_1 = k_2.subtract(diff);
+						if (b.mod(k_1).compareTo(BigInteger.ZERO) == 0) {
+							result = new Pair(k_1, k_2);
+							break;
+						}
+					}
+				}
+					
+			} else {
+				
+				System.out.println("a is"+a.toString()+" test 2");
+				
+				for (BigInteger k_2 = new BigInteger("2"); a.compareTo(k_2.multiply(k_2)) >= 0; k_2 = k_2.add(BigInteger.ONE) ) {
+					if (a.mod(k_2).compareTo(BigInteger.ZERO) == 0) {
+						BigInteger k_1 = k_2.subtract(diff);
+						if (b.mod(k_1).compareTo(BigInteger.ZERO) == 0) {
+							result = new Pair(k_1, k_2);
+							break;
+						}
+					}
+				}
+			}
+			
+			
+		}
 		
+		System.out.println("k_1 is"+result.getMin().toString());
+		System.out.println("k_2 is"+result.getMax().toString());
 	}
 	
 	public static void readTxtFile(String filePath, ArrayList<Pair> list){
@@ -45,10 +93,10 @@ public class Guo_attack {
 						(line_2 = bufferedReader.readLine()) != null ){
 
 					StringBuilder temp_1 = new StringBuilder (line_1);
-					temp_1.delete(0, 1);
+					temp_1.delete(0, 2);
 					
 					StringBuilder temp_2 = new StringBuilder (line_2);
-					temp_1.delete(0, 1);
+					temp_2.delete(0, 2);
 					
 					BigInteger a = new BigInteger(temp_1.toString());
 					BigInteger b = new BigInteger(temp_2.toString());
@@ -59,7 +107,7 @@ public class Guo_attack {
 					
 
 					
-					System.out.println("Pair is "+temp_1.toString() +" and "+temp_2.toString());
+					System.out.println("Pair is "+a.toString() +" and "+b.toString());
 					
 				}
 
